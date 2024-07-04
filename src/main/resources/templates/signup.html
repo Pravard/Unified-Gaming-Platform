@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sign up Page</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #222;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            max-width: 400px;
+            width: 90%;
+        }
+
+        h1 {
+            font-size: 3rem;
+            color: #ffcc00;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        form {
+            text-align: center;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="submit"] {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 25px;
+            box-sizing: border-box;
+            font-size: 1.2rem;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 2px solid transparent;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            border-color: #ffcc00;
+            outline: none;
+        }
+
+        input[type="submit"] {
+            background: linear-gradient(45deg, #ff5733, #ffcc00);
+            color: #fff;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        input[type="submit"]:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+    </style>
+    <script>
+        function Sign_Up(event)
+        {
+            event.preventDefault();
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+            fetch("/user_signup",{
+                method : "POST",
+                headers:{"Content-Type":"application/json"},
+                body:JSON.stringify({"username":username,"password":password})
+            })
+            .then(response=>{if(response.status == 200)
+            {
+                alert("Sign Up Successful")
+                window.location.href = "/home"
+            }
+            else{
+                alert("Username already in use!")
+            }})
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Sign Up</h1>
+        <form onsubmit="Sign_Up(event)">
+            <input type="text" id="username" placeholder="Enter username">
+            <input type="password" id="password" placeholder="Enter password">
+            <input type="submit" value="Sign Up">
+        </form>
+    </div>
+</body>
+</html>

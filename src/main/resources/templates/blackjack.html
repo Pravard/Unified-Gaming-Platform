@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<head>
+    <title>BlackJack</title>
+    <script>
+        function hit()
+        {
+            var amt = document.getElementById("box").value;
+            fetch("/blackjack/update",{
+                method : "POST",
+                headers:{"Content-Type":"application/json"},
+                body:JSON.stringify({"action":"hit","amount":amt})
+            }).then(res=>window.location.href = "/blackjack")
+        }
+        function stand()
+        {
+            var amt = document.getElementById("box").value;
+            fetch("/blackjack/update",{
+                method : "POST",
+                headers:{"Content-Type":"application/json"},
+                body:JSON.stringify({"action":"stand","amount":amt})
+            }).then(res=>window.location.href = "/blackjack")
+        }
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url("/9999520.jpg");
+            background-size: cover; /* Ensure the background image covers the entire body */
+            background-position: center; /* Center the background image */
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .image-container {
+            display: flex;
+            justify-content: center;
+            width: 80%;
+            margin-bottom: 20px;
+        }
+
+        .image-container img {
+            width: 150px;
+            height: 200px;
+            border-radius: 8px;
+            margin: 0 10px; /* Add a little extra space between adjacent images */
+        }
+
+        .image-container:nth-child(2) {
+            margin-top: 10px; /* Add a small gap between the two rows */
+
+        }
+        p {
+            font-size: 1.2rem;
+            margin-top: 20px;
+        }
+
+        .score-container {
+            font-size: 1.2rem;
+            margin-top: 20px;
+        }
+
+        input[type="range"] {
+            width: 80%;
+            margin: 10px 0;
+        }
+
+        input[type="number"] {
+            width: 80px;
+            padding: 5px;
+            margin-right: 10px;
+            border-radius: 5px;
+            border: none;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 1.2rem;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        /* Change color of Hit and Stand buttons to blue */
+        button {
+            background-color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="image-container">
+    <img th:each="card:${blackjack.mask}" width="60px" style="border-radius: 8%" th:src="@{${card}}"></div>
+    <br/>
+    <div class="image-container">
+    <img th:each="card:${blackjack.playerHand}" width="60px" style="border-radius: 8%" th:src="@{${card.getImgPath()}}"></div>
+    <p>Your score: [[${blackjack.playerPoints()}]]</p>
+    <br/>
+    
+    <input type="range" max="1000" min="100" value="100" id="slider" style="margin-bottom: 25px;">
+    <input type="number" max="1000" min="100" value="100" id="box">
+    <br/>
+    <button onclick="hit()">Hit</button>
+    <button onclick="stand()">Stand</button>
+</body>
+<script>
+    var slider = document.getElementById("slider")
+    var box = document.getElementById("box")
+    box.addEventListener("change",function()
+{
+    slider.value = box.value;
+})
+slider.addEventListener("change",function()
+{
+    box.value = slider.value;
+})
+</script>

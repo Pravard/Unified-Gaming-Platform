@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slot Machine</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .machine {
+            background-color: peru;
+            border: dashed brown 3px;
+            height: 300px;
+            width: 900px;
+            margin: 20px auto;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-radius: 20px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slot {
+            height: 250px;
+            width: 250px;
+            overflow: hidden;
+            background-color: beige;
+            border: solid darkblue 2px;
+            text-align: center;
+            font-size: 100pt;
+            line-height: 250px;
+            border-radius: 10px;
+            position: relative;
+            animation: slot-spin var(--spin-duration) cubic-bezier(0.25, 0.1, 0.25, 1) infinite, bounce 1.5s ease-in-out infinite;
+            filter: blur(0); 
+            transition: filter 0.2s ease;
+        }
+
+        @keyframes slot-spin {
+            0% {
+                transform: translateY(-200px);
+                filter: blur(4px);
+            }
+
+            100% {
+                transform: translateY(200px);
+                filter: blur(4px);            }
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        #spinBtn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 30px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+            outline: none;
+        }
+
+        #spinBtn:hover {
+            background-color: #45a049;
+        }
+
+        #result {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+
+        #balance {
+            font-size: 20px;
+            margin-top: 10px;
+            color: #555;
+        }
+
+        #betInput {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-top: 10px;
+            width: 100px;
+        }
+    </style>
+    <script>
+    </script>
+</head>
+
+<body>
+    <div style="position: absolute; top: 10px;left:10px;background-color: black;border-radius: 5px;width: 7%;text-align: center;text-justify: auto;vertical-align: middle;font-family: 'Bahnschrift SemiBold';"><a href="/home" style="color: white;font-size: large;">Back</a></div>
+    <div id="container">
+        <h1>🎰 Slot Machine 🎰</h1>
+        <div class="machine">
+            <div class="slot" id="slot1">
+                <div class="value" id="slot1Value">[[${slot1}]]</div>
+            </div>
+            <div class="slot" id="slot2">
+                <div class="value" id="slot2Value">[[${slot2}]]</div>
+            </div>
+            <div class="slot" id="slot3">
+                <div class="value" id="slot3Value">[[${slot3}]]</div>
+            </div>
+        </div>
+        <label for="betInput">Bet Amount:</label>
+        <input type="number" id="betInput" min="1" max="500" value="10">
+        <button id="spinBtn">Spin</button>
+        <p id="result">[[${result}]]</p>
+        <p id="balance">Balance: [[${mymoney}]]</p>
+    </div>
+
+    <script>
+        let slot1Value = document.getElementById('slot1Value');
+        let slot2Value = document.getElementById('slot2Value');
+        let slot3Value = document.getElementById('slot3Value');
+        let spinBtn = document.getElementById('spinBtn');
+        let resultDisplay = document.getElementById('result');
+        let balanceDisplay = document.getElementById('balance');
+        let betInput = document.getElementById('betInput');
+
+        let values = ['💸', '7️⃣', '🍒', '🔔', '🀄'];
+        function getRandomValue() {
+            return values[Math.floor(Math.random() * values.length)];
+        }
+
+        function spin() {
+            let betAmount = parseInt(betInput.value);
+            spinBtn.disabled = true;  
+            let spins = 0;
+            let maxSpins = 10; 
+            let spinInterval = setInterval(() => {
+                slot1Value.innerText = getRandomValue();
+                slot2Value.innerText = getRandomValue();
+                slot3Value.innerText = getRandomValue();
+                spins++;
+                if (spins >= maxSpins) {
+                    clearInterval(spinInterval);
+                    checkWin(betAmount);
+                }
+            // }, 1000 / parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--speed')));
+          }, 200);
+        }
+
+        function retValue(innerText)
+        {
+            if (innerText == "💸")
+            {
+                return 50;
+            }
+            if (innerText == "7️⃣")
+            {
+                return 70;
+            }
+            if (innerText == "🍒")
+            {
+                return 30;
+            }
+            if (innerText == "🔔")
+            {
+                return 20;
+            }
+            if (innerText == "🀄")
+            {
+                return 15;
+            }
+        }
+        function checkWin(betAmount) {
+            if (slot1Value.innerText === slot2Value.innerText && slot2Value.innerText === slot3Value.innerText) {
+                var winnings = betAmount * retValue(slot1Value.innerText);
+            }
+            else if (slot1Value.innerText === slot2Value.innerText || slot2Value.innerText === slot3Value.innerText || slot1Value.innerText === slot3Value.innerText) {
+                var winnings = -1*betAmount+Math.floor(betAmount * retValue(slot1Value.innerText) * 0.2);
+                console.log(winnings)
+            } else {
+                var winnings = -1*betAmount;
+                console.log(winnings)
+            }
+            fetch("/slotmachine/update",{
+                method : "POST",
+                headers:{"Content-Type":"application/json"},
+                body:JSON.stringify({"amount":winnings,"slot1":slot1Value.innerText,"slot2":slot2Value.innerText,"slot3":slot3Value.innerText})
+            }).then(response=>window.location.href="/slotmachine")
+            spinBtn.disabled = false; 
+        }
+
+        spinBtn.addEventListener('click', spin);
+    </script>
+</body>
+
+</html>

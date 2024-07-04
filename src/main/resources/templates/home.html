@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Screen</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #222;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            max-width: 600px;
+            width: 90%;
+        }
+
+        h1 {
+            font-size: 3rem;
+            color: #ffcc00;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .button-container a {
+            text-decoration: none;
+        }
+
+        .button {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            background: linear-gradient(45deg, #ff5733, #ffcc00);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            width: 50%;
+        }
+
+        .button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div style="position: absolute; top: 10px;left:10px;background-color: black;border-radius: 5px;width: 7%;text-align: center;text-justify: auto;vertical-align: middle;font-family: 'Bahnschrift SemiBold';"><a href="/user_login" style="color: white;font-size: large;">Login to different account</a></div>
+    <div style="position: absolute; top: 10px;right:10px;background-color: black;border-radius: 5px;width: 7%;text-align: center;text-justify: auto;vertical-align: middle;font-family: 'Bahnschrift SemiBold';"><a href="/user_signup" style="color: white;font-size: large;">New account</a></div>
+    <div class="container">
+        <h1 th:inline="text">Welcome [[${Username}]]</h1>
+        <p style="color: aliceblue;">You have [[${mymoney}]] Virtual Points</p>
+        <div class="button-container">
+            <a href="/poker" class="button">Play Poker</a>
+            <a href="/blackjack" class="button">Play BlackJack</a>
+            <a href="/slotmachine" class="button">Play Slot Machine</a>
+            <a href="/weather" class="button">Play Weather Predicting Game</a>
+            <a href="/highscore" class="button">See Highscores</a>
+        </div>
+    </div>
+</body>
+</html>

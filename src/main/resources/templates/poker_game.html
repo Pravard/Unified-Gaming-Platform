@@ -1,0 +1,158 @@
+
+    <head>
+        <title>Poker</title>
+        <script>
+            function Poker_Update(event)
+            {
+                event.preventDefault();
+                var choice1 = document.getElementById("choice").value;
+                var amount1 = document.getElementById("range_out").value;
+                if(choice1=="raise")
+                {
+                    
+                    fetch("/poker/updater",{method:"POST",headers:{"Content-Type":"application/json"},
+                    body:JSON.stringify({"action":choice1,"amount":amount1})})
+                    .then(response=> window.location.href = "/poker/game")
+                    
+                }
+                else
+                {
+                    fetch("/poker/updater",{method:"POST",headers:{"Content-Type":"application/json"},
+                    body:JSON.stringify({"action":choice1})})
+                    .then(response=> window.location.href = "/poker/game")
+                    
+                }
+            }
+        </script>
+        <style>
+            body {
+            font-family: Arial, sans-serif;
+            background-image: url("/9999520.jpg");
+            background-size: cover; /* Ensure the background image covers the entire body */
+            background-position: center; /* Center the background image */
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-container {
+            display: flex;
+            justify-content: center;
+            width: 80%;
+        }
+
+        .image-container img {
+            width: 150px;
+            height: 200px;
+            border-radius: 8px;
+            margin: 0 10px; /* Add a little extra space between adjacent images */
+        }
+
+        
+        p {
+            font-size: 1.2rem;
+        }
+
+        .score-container {
+            font-size: 1.2rem;
+        }
+
+        input[type="range"] {
+            width: 80%;
+            margin: 10px 0;
+        }
+
+        input[type="number"],input[type="select"] {
+            width: 80px;
+            padding: 5px;
+            margin-right: 10px;
+            border-radius: 5px;
+            border: none;
+        }
+
+        input[type="submit"]
+         {
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 1.2rem;
+            transition: background-color 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        /* Change color of Hit and Stand buttons to blue */
+        input[type="submit"] {
+            background-color: #007bff;
+        }
+        </style>
+    </head>
+    <body style="background-image: url('/9999520.jpg');background-repeat: no-repeat;background-attachment: fixed;background-size:100% 100%;">
+        <br/>
+        <br/>
+        <pre style="font-family:'Bahnschrift SemiBold';">Cards on table</pre>
+        <div class="image-container">
+        <img width="60px" style="border-radius: 8%" th:src="@{${Table0}}">
+        <img width="60px" style="border-radius: 8%" th:src="@{${Table1}}">
+        <img width="60px" style="border-radius: 8%" th:src="@{${Table2}}">
+        <img width="60px" style="border-radius: 8%" th:src="@{${Table3}}">
+        <img width="60px" style="border-radius: 8%" th:src="@{${Table4}}">
+        </div>
+        <pre style="font-family:'Bahnschrift SemiBold';">Your Cards</pre>
+        <div class="image-container">
+        <img width="60px" style="border-radius: 8%" th:src="@{${MyCard0}}">
+        <img width="60px" style="border-radius: 8%" th:src="@{${MyCard1}}"></div>
+        <h3 th:inline="text"><pre style="font-family:'Bahnschrift SemiBold';">[[${Points}]]</pre></h3>
+        <pre style="font-family:'Bahnschrift SemiBold';">You are paying: [[${pay_per_person}]]/[[${mymoney}]]</pre>
+        <pre style="font-family:'Bahnschrift SemiBold';">Pot: [[${pot}]]</pre>
+        <pre style="font-family:'Bahnschrift SemiBold';">Each person's contibution: [[${all_paid}]]</pre>
+    <form onsubmit="Poker_Update(event)">
+        <select id="choice">
+            <option value="check"  onclick="disableslider()">Check</option>
+            <option value="raise" onclick="enableslider()">Raise</option>
+            <option value="fold"  onclick="disaleslider()">Fold</option>
+        </select>
+        <input type="range" id = "slider" min="1" max = "100" value = "1" disabled="True">
+        <input type="number" min = "1" max = "100" id="range_out" disabled="True">
+        <input type="submit" value="Next">
+        <h3 th:inline="text"><pre style="font-family:'Bahnschrift SemiBold';">       Other users decisions: [[${oth_decisions}]]</pre></h3>
+    </form>
+    </body>
+    <script>
+        let ele = document.getElementById("choice");
+        ele.addEventListener('change', function() {
+        var selectedOption = ele.value;
+        var slider = document.getElementById('slider');
+        var field = document.getElementById('range_out');
+        
+        if (selectedOption === 'raise') {
+            slider.disabled = false;
+            field.disabled = false;
+        } else {
+            slider.value=1
+            field.value=0
+            slider.disabled = true;
+            field.disabled = true;
+        }
+        });
+        var slider = document.getElementById('slider');
+        var field = document.getElementById('range_out');
+        slider.addEventListener("change",function()
+    {
+        field.value =slider.value
+    })
+    field.addEventListener("change",function()
+    {
+        slider.value =field.value
+    })
+    </script>

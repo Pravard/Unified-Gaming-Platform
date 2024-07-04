@@ -1,0 +1,228 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Prediction Game</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body, html {
+            height: 100%;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        video {
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 204, 0.8);
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 40%;
+            height: 60%;
+            margin: 50px auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            /* align-items: center; */
+        }
+
+        h4 {
+            text-align: center;
+            font-family: 'Inconsolata', monospace;
+            margin-bottom: 20px;
+            font-size: 30px;
+            font-weight: bold;
+            color: rgb(36, 35, 35);
+        }
+
+        h1 {
+            margin-top: 4%;
+            text-align: center;
+            font-family: 'Inconsolata', monospace;
+            margin-bottom: 20px;
+            font-size: 72px;
+            font-weight: bold;
+            color: #FFFFCC;
+        }
+
+        #b1 {
+            margin-top: 3%
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+            width: 80%;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .form-group input[type="text"], 
+        .form-group input[type="date"], 
+        .form-group input[type="time"],
+        .form-group input[type="number"],
+        .form-group select {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            width: 100%;
+        }
+
+        input[type="submit"],button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            width: 80%;
+        }
+
+        .bt {
+            margin-top: 3%;
+            /* align-items: center; */
+            padding: 5px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 80%;
+        }
+
+        input[type="submit"]:hover,button:hover {
+            background-color: #0056b3;
+        }
+
+        .nav-link, .navbar-brand {
+            font-family: 'Inconsolata', monospace;
+        }
+        .bt {
+        margin-top: 3%;
+        text-align: center; /* Align button text center */
+        width: 80%; /* Set button width */
+        }
+
+        .bt button {
+            display: block; /* Make button a block element */
+            margin: 0 auto; /* Center button horizontally */
+        }
+
+        a {
+            
+        }
+
+        .butt {
+            align-items:center;
+        }
+    
+    </style>
+</head>
+<body>
+    <div style="position: absolute; top: 10px;left:10px;background-color: black;border-radius: 5px;width: 7%;text-align: center;text-justify: auto;vertical-align: middle;font-family: 'Bahnschrift SemiBold';"><a href="/home" style="color: white;font-size: large;">Back</a></div>
+
+<div class="video-container">
+    <video autoplay muted loop>
+        <source src="/star2.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+</div>
+
+<h1>Weather Predicting Game</h1>
+
+<div class="container">
+    <h4>Predict the weather of Bangalore tomorrow</h4>
+    <form id="weatherForm" onsubmit="submitForm(event)">
+        <div class="form-group">
+            <label for="temp">Temperature (in °C):</label>
+            <input id="temp" type="number" step="0.1" min="-50.0" max="60.0">
+        </div>
+
+        <div class="form-group">
+            <label for="wind">Wind Speed (in m/s):</label>
+            <input id="wind" type="number" step="0.01" min="0.0" max="10.0">
+        </div>
+
+        <input id="b1" type="submit" value="Predict Weather">
+        <br/>
+        
+    </form>
+    <div class="butt">
+        <a href="/weather/outcomes" class="bt"><button>Check today's results</button></a>
+    </div>
+    
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function submitForm(event) {
+        event.preventDefault();
+        var temp = document.getElementById('temp').value;
+        var wind = document.getElementById('wind').value;
+
+        // Check if both input fields are not empty
+        if (temp.trim() === '' || wind.trim() === '') {
+            alert("Please enter values for both Temperature and Wind Speed.");
+            return; // Prevent form submission if fields are empty
+        }
+
+        var formData = {
+            "Temperature": temp,
+            "WindSpeed": wind
+        };
+
+        fetch('/weather/save', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => {
+            if (response.status == 200) {
+                alert("Prediction saved");
+            } else {
+                alert("Prediction already saved!");
+            }
+        });
+    }
+</script>
+</body>
+</html>
+
