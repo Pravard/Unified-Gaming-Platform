@@ -12,7 +12,7 @@ public class WeatherData {
     public WeatherData()
     {}
     public void callWeatherAPI(String place) {
-        String apiKey = "f11725e805e3f0202bc5a82c48531903";
+        String apiKey = "";
         String apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + place + "&appid=" + apiKey;
         RestTemplate restTemplate = new RestTemplate();
         try {
